@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ordenes por Voz con PIN</title>
+<script>
+    // Definir el PIN autorizado
+    const PIN_AUTORIZADO = "3105";
+
+    // Función para validar el PIN
+    function validarPIN(pin) {
+        return pin === PIN_AUTORIZADO;
+    }
+
+    // Función para iniciar el reconocimiento de voz
+    function iniciarReconocimiento() {
+        const recognition = new webkitSpeechRecognition() || SpeechRecognition();
+        recognition.lang = 'es-ES';
+
+        recognition.onresult = function(event) {
+            const pinIngresado = event.results[0][0].transcript.trim();
+            if (validarPIN(pinIngresado)) {
+                document.getElementById("estado").innerHTML = "PIN válido. Puede dar órdenes ahora.";
+                document.getElementById("orden").disabled = false;
+            } else {
+                document.getElementById("estado").innerHTML = "PIN incorrecto. Inténtelo de nuevo.";
+            }
+        }
+
+        recognition.start();
+    }
+</script>
+</head>
+<body>
+    <h1>Ordenes por Voz con PIN</h1>
+    <p id="estado">Presione el botón para iniciar el reconocimiento de voz:</p>
+    <button onclick="iniciarReconocimiento()">Iniciar reconocimiento</button><br>
+    <textarea id="orden" rows="4" cols="50" placeholder="Ingrese aquí su orden..." disabled></textarea>
+    <script type = 'module' src="index.html"></script>
+</body>
+</html>
